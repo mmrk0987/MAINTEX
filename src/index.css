@@ -1,0 +1,322 @@
+@import "tailwindcss";
+
+@layer base {
+  /* ==========================================================================
+     X.COM INSPIRED DARK DESIGN SYSTEM TOKENS
+     ========================================================================== */
+  :root,
+  [data-theme="dark"],
+  .dark {
+    color-scheme: dark;
+    --bg-primary: #000000;
+    --bg-surface: #16181C;
+    --bg-secondary: #202327;
+    --border-color: #2F3336;
+    --text-primary: #FFFFFF;
+    --text-secondary: #71767B;
+    --text-muted: #536471;
+    --accent-color: #1D9BF0;
+    --accent-hover: #1A8CD8;
+    --accent-text: #1D9BF0;
+    --card-shadow: none;
+
+    /* Status Indicator Tokens (X Dark Theme) */
+    --badge-critical-bg: rgba(244, 33, 46, 0.12);
+    --badge-critical-text: #F4212E;
+    --badge-critical-border: rgba(244, 33, 46, 0.3);
+
+    --badge-warning-bg: rgba(255, 173, 31, 0.12);
+    --badge-warning-text: #FFAD1F;
+    --badge-warning-border: rgba(255, 173, 31, 0.3);
+
+    --badge-success-bg: rgba(0, 186, 124, 0.12);
+    --badge-success-text: #00BA7C;
+    --badge-success-border: rgba(0, 186, 124, 0.3);
+
+    --badge-info-bg: rgba(29, 155, 240, 0.12);
+    --badge-info-text: #1D9BF0;
+    --badge-info-border: rgba(29, 155, 240, 0.3);
+  }
+
+  [data-theme="light"],
+  .light {
+    color-scheme: light;
+    --bg-primary: #FFFFFF;
+    --bg-surface: #F7F9F9;
+    --bg-secondary: #EFF3F4;
+    --border-color: #EFF3F4;
+    --text-primary: #0F1419;
+    --text-secondary: #536471;
+    --text-muted: #8B98A5;
+    --accent-color: #1D9BF0;
+    --accent-hover: #1A8CD8;
+    --accent-text: #1D9BF0;
+    --card-shadow: none;
+
+    --badge-critical-bg: #FEE8E8;
+    --badge-critical-text: #F4212E;
+    --badge-critical-border: #FCD0D0;
+
+    --badge-warning-bg: #FFF7E6;
+    --badge-warning-text: #B45309;
+    --badge-warning-border: #FFE8B8;
+
+    --badge-success-bg: #E6F8F2;
+    --badge-success-text: #00BA7C;
+    --badge-success-border: #B7ECD8;
+
+    --badge-info-bg: #E8F5FD;
+    --badge-info-text: #1D9BF0;
+    --badge-info-border: #CBE7FA;
+  }
+
+  body {
+    background-color: var(--bg-primary);
+    color: var(--text-primary);
+    font-family: -apple-system, BlinkMacSystemFont, "Segoe UI", Roboto, Helvetica, Arial, sans-serif;
+    letter-spacing: -0.01em;
+    transition: background-color 0.15s ease, color 0.15s ease;
+  }
+
+  h1, h2, h3, .font-display {
+    font-family: -apple-system, BlinkMacSystemFont, "Segoe UI", Roboto, Helvetica, Arial, sans-serif;
+    letter-spacing: -0.015em;
+  }
+
+  .font-mono-tech, code, kbd, samp {
+    font-family: ui-monospace, SFMono-Regular, Menlo, Monaco, Consolas, monospace;
+    font-variant-numeric: tabular-nums;
+  }
+}
+
+/* ==========================================================================
+   SEMANTIC ENTERPRISE COMPONENT CLASSES USING CSS VARIABLES
+   ========================================================================== */
+.cmms-canvas {
+  background-color: var(--bg-primary);
+  color: var(--text-primary);
+}
+
+.cmms-card {
+  background-color: var(--bg-surface);
+  border: 1px solid var(--border-color);
+  box-shadow: var(--card-shadow);
+  transition: border-color 0.15s ease, box-shadow 0.15s ease;
+}
+
+.cmms-secondary {
+  background-color: var(--bg-secondary);
+  border-color: var(--border-color);
+}
+
+.cmms-badge-critical {
+  background-color: var(--badge-critical-bg);
+  color: var(--badge-critical-text);
+  border: 1px solid var(--badge-critical-border);
+}
+
+.cmms-badge-warning {
+  background-color: var(--badge-warning-bg);
+  color: var(--badge-warning-text);
+  border: 1px solid var(--badge-warning-border);
+}
+
+.cmms-badge-success {
+  background-color: var(--badge-success-bg);
+  color: var(--badge-success-text);
+  border: 1px solid var(--badge-success-border);
+}
+
+.cmms-badge-info {
+  background-color: var(--badge-info-bg);
+  color: var(--badge-info-text);
+  border: 1px solid var(--badge-info-border);
+}
+
+/* Smooth Interactive Focus & Transition Defaults */
+input, select, textarea, button {
+  font-family: inherit;
+}
+
+input:focus-visible, select:focus-visible, textarea:focus-visible, button:focus-visible {
+  outline: 2px solid var(--accent-color);
+  outline-offset: 1px;
+}
+
+.cmms-input {
+  background-color: var(--bg-primary);
+  border: 1px solid var(--border-color);
+  color: var(--text-primary);
+  border-radius: 0.5rem;
+  transition: border-color 0.15s ease, box-shadow 0.15s ease;
+}
+
+.cmms-input:focus {
+  border-color: var(--accent-color);
+  outline: none;
+}
+
+.no-scrollbar::-webkit-scrollbar {
+  display: none;
+}
+.no-scrollbar {
+  -ms-overflow-style: none;
+  scrollbar-width: none;
+}
+
+/* Print and Screen visibility utilities */
+@media screen {
+  .print-only {
+    display: none !important;
+  }
+}
+
+@media print {
+  .print-only {
+    display: block !important;
+  }
+  .no-print {
+    display: none !important;
+  }
+}
+
+/* ==========================================================================
+   DEEP DARK-MODE TOKEN MAPPING FOR EXISTING HARDCODED UTILITY CLASSES
+   Enforces deep, rich dark aesthetic across all panels and screens
+   ========================================================================== */
+[data-theme="dark"] .bg-\[\#0D1014\],
+.dark .bg-\[\#0D1014\],
+:root:not([data-theme="light"]) .bg-\[\#0D1014\] {
+  background-color: var(--bg-primary) !important;
+}
+
+[data-theme="dark"] .bg-\[\#151A21\],
+.dark .bg-\[\#151A21\],
+:root:not([data-theme="light"]) .bg-\[\#151A21\] {
+  background-color: var(--bg-surface) !important;
+}
+
+[data-theme="dark"] .bg-\[\#1C222B\],
+.dark .bg-\[\#1C222B\],
+:root:not([data-theme="light"]) .bg-\[\#1C222B\] {
+  background-color: var(--bg-secondary) !important;
+}
+
+[data-theme="dark"] .border-\[\#262F3D\],
+.dark .border-\[\#262F3D\],
+:root:not([data-theme="light"]) .border-\[\#262F3D\] {
+  border-color: var(--border-color) !important;
+}
+
+/* ==========================================================================
+   GLOBAL LIGHT-MODE TOKEN MAPPING FOR EXISTING HARDCODED UTILITY CLASSES
+   Ensures 100% visual consistency across all 12 CMMS modules in Light Mode
+   ========================================================================== */
+[data-theme="light"] .bg-\[\#0D1014\],
+[data-theme="light"] .bg-\[\#0D1014\]\/50,
+[data-theme="light"] .bg-\[\#0D1014\]\/60 {
+  background-color: var(--bg-primary) !important;
+}
+
+[data-theme="light"] .bg-\[\#151A21\] {
+  background-color: var(--bg-surface) !important;
+  box-shadow: var(--card-shadow);
+}
+
+[data-theme="light"] .bg-\[\#1C222B\],
+[data-theme="light"] .hover\:bg-\[\#1C222B\]:hover,
+[data-theme="light"] .hover\:bg-\[\#1C222B\]\/50:hover,
+[data-theme="light"] .hover\:bg-\[\#1C222B\]\/60:hover {
+  background-color: var(--bg-secondary) !important;
+}
+
+[data-theme="light"] .border-\[\#262F3D\] {
+  border-color: var(--border-color) !important;
+}
+
+[data-theme="light"] .divide-\[\#262F3D\] > :not([hidden]) ~ :not([hidden]) {
+  border-color: var(--border-color) !important;
+}
+
+[data-theme="light"] .text-\[\#F1F5F9\],
+[data-theme="light"] .text-\[\#E2E8F0\],
+[data-theme="light"] .hover\:text-\[\#F1F5F9\]:hover {
+  color: var(--text-primary) !important;
+}
+
+[data-theme="light"] .text-\[\#94A3B8\] {
+  color: var(--text-secondary) !important;
+}
+
+[data-theme="light"] .text-\[\#64748B\] {
+  color: var(--text-muted) !important;
+}
+
+[data-theme="light"] .text-\[\#38BDF8\],
+[data-theme="light"] .text-\[\#0070F3\] {
+  color: var(--accent-color) !important;
+}
+
+/* Soft Light-Mode Status Badges */
+[data-theme="light"] .bg-\[\#EF4444\]\/15,
+[data-theme="light"] .bg-\[\#EF4444\]\/10 {
+  background-color: var(--badge-critical-bg) !important;
+}
+[data-theme="light"] .text-\[\#EF4444\] {
+  color: var(--badge-critical-text) !important;
+}
+[data-theme="light"] .border-\[\#EF4444\]\/30,
+[data-theme="light"] .border-\[\#EF4444\]\/40 {
+  border-color: var(--badge-critical-border) !important;
+}
+
+[data-theme="light"] .bg-\[\#F59E0B\]\/15,
+[data-theme="light"] .bg-\[\#F59E0B\]\/10 {
+  background-color: var(--badge-warning-bg) !important;
+}
+[data-theme="light"] .text-\[\#F59E0B\] {
+  color: var(--badge-warning-text) !important;
+}
+[data-theme="light"] .border-\[\#F59E0B\]\/30,
+[data-theme="light"] .border-\[\#F59E0B\]\/40 {
+  border-color: var(--badge-warning-border) !important;
+}
+
+[data-theme="light"] .bg-\[\#10B981\]\/15,
+[data-theme="light"] .bg-\[\#10B981\]\/20,
+[data-theme="light"] .bg-\[\#10B981\]\/10 {
+  background-color: var(--badge-success-bg) !important;
+}
+[data-theme="light"] .text-\[\#10B981\] {
+  color: var(--badge-success-text) !important;
+}
+[data-theme="light"] .border-\[\#10B981\]\/30,
+[data-theme="light"] .border-\[\#10B981\]\/40 {
+  border-color: var(--badge-success-border) !important;
+}
+
+[data-theme="light"] .bg-\[\#0070F3\]\/15,
+[data-theme="light"] .bg-\[\#0070F3\]\/20,
+[data-theme="light"] .bg-\[\#0070F3\]\/10 {
+  background-color: var(--badge-info-bg) !important;
+}
+[data-theme="light"] .border-\[\#0070F3\]\/30,
+[data-theme="light"] .border-\[\#0070F3\]\/40 {
+  border-color: var(--badge-info-border) !important;
+}
+
+/* Custom subtle scrollbars for both Dark & Light modes */
+::-webkit-scrollbar {
+  width: 6px;
+  height: 6px;
+}
+::-webkit-scrollbar-track {
+  background: var(--bg-primary);
+}
+::-webkit-scrollbar-thumb {
+  background: var(--border-color);
+  border-radius: 3px;
+}
+::-webkit-scrollbar-thumb:hover {
+  background: var(--accent-color);
+}

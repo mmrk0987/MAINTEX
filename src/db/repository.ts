@@ -59,22 +59,39 @@ let globalAnnouncementsStore: GlobalAnnouncementItem[] = [
 
 export const inMemoryCompanyStores = new Map<string, any>();
 
-export function getInMemoryCompanyState(rawCompanyCode?: string, rawCompanyName?: string) {
+export const EMPTY_PLANT_STATE = {
+  currentUser: null,
+  departments: [],
+  users: [],
+  sections: [],
+  machines: [],
+  components: [],
+  spareParts: [],
+  breakdownLogs: [],
+  dailyMaintenance: [],
+  preventiveSchedules: [],
+  machineHistory: [],
+  complaints: [],
+  spareStock: [],
+  stockIssues: [],
+  stockReceives: [],
+  lowStockAlerts: [],
+  requisitions: [],
+  approvals: [],
+  purchaseHistory: [],
+  activityLogs: [],
+  documents: [],
+  updateRequests: [],
+  globalAnnouncements: [],
+  companyDirectory: [],
+  syncedAt: new Date().toISOString(),
+};
+
+export function getInMemoryCompanyState(rawCompanyCode?: string, _rawCompanyName?: string) {
   const companyCode = normalizeCompanyCode(rawCompanyCode);
-  const companyName =
-    rawCompanyName && rawCompanyName.trim().length > 0 ? rawCompanyName.trim() : companyCode;
 
   if (!inMemoryCompanyStores.has(companyCode)) {
-    const known = KNOWN_INDUSTRY_COMPANIES.find((c) => c.code === companyCode);
-    const location = known?.location || 'Industrial Area, Bangladesh';
-    const category = known?.category || 'Industrial Manufacturing & Utilities';
-    const initial = buildSeedPlantState(
-      companyCode,
-      known?.name || companyName,
-      location,
-      category
-    );
-    inMemoryCompanyStores.set(companyCode, initial);
+    inMemoryCompanyStores.set(companyCode, JSON.parse(JSON.stringify(EMPTY_PLANT_STATE)));
   }
   return inMemoryCompanyStores.get(companyCode)!;
 }
@@ -609,23 +626,6 @@ export async function getAllCompaniesDirectory(): Promise<CompanyDirectoryItem[]
     entry.lastActiveAt = state.syncedAt || new Date().toISOString();
   }
 
-  for (const kc of KNOWN_INDUSTRY_COMPANIES) {
-    if (!map.has(kc.code)) {
-      const s = getInMemoryCompanyState(kc.code, kc.name);
-      const entry = ensureEntry(kc.code, kc.name);
-      if (entry) {
-        entry.userCount = s.users?.length || 4;
-        entry.departmentCount = s.departments?.length || 4;
-        entry.machineCount = s.machines?.length || 4;
-        entry.sparePartCount = s.spareParts?.length || 6;
-        entry.openBreakdowns = (s.breakdownLogs || []).filter(
-          (b: any) => b.status !== 'Resolved' && b.status !== 'Closed'
-        ).length;
-        entry.plantAdmins.add('mdmahfuj0987@gmail.com');
-        entry.plantAdmins.add('administration.maintex.com@gmail.com');
-      }
-    }
-  }
 
   if (db && isDatabaseAvailable()) {
     try {
@@ -2798,6 +2798,65 @@ export async function superAdminRestoreBackupRecord(
     throw new Error('Unauthorized: Super Admin privileges required.');
   }
 
+  if (!isDatabaseAvailable()) {
+    throw new Error('Database is offline. Cannot restore backup snapshot into PostgreSQL.');
+  }
+
+  if (!backupData || typeof backupData !== 'object') {
+    throw new Error('Invalid backup data payload.');
+  }
+
+  const stateToRestore = backupData.companyState || backupData.data || backupData;
+  if (!stateToRestore || typeof stateToRestore !== 'object') {
+    throw new Error('No valid company state found in backup payload.');
+  }
+
+  const {
+    departments: depts,
+    users: usrs,
+    sections: secs,
+    machines: mchs,
+    components: cmps,
+    spareParts: sps,
+    breakdownLogs: bds,
+    dailyMaintenance: dms,
+    preventiveSchedules: pms,
+    machineHistory: mhs,
+    complaints: cmpsList,
+    spareStock: stks,
+    stockIssues: iss,
+    stockReceives: rcvs,
+    lowStockAlerts: alts,
+    requisitions: reqs,
+    approvals: apprs,
+    purchaseHistory: purchs,
+    activityLogs: logs,
+    documents: docs,
+  } = stateToRestore;
+
+  await db.transaction(async (tx: any) => {
+    if (Array.isArray(depts) && depts.length > 0) await tx.insert(departments).values(depts).onConflictDoNothing();
+    if (Array.isArray(usrs) && usrs.length > 0) await tx.insert(users).values(usrs).onConflictDoNothing();
+    if (Array.isArray(secs) && secs.length > 0) await tx.insert(sections).values(secs).onConflictDoNothing();
+    if (Array.isArray(mchs) && mchs.length > 0) await tx.insert(machines).values(mchs).onConflictDoNothing();
+    if (Array.isArray(cmps) && cmps.length > 0) await tx.insert(components).values(cmps).onConflictDoNothing();
+    if (Array.isArray(sps) && sps.length > 0) await tx.insert(spareParts).values(sps).onConflictDoNothing();
+    if (Array.isArray(bds) && bds.length > 0) await tx.insert(breakdownLogs).values(bds).onConflictDoNothing();
+    if (Array.isArray(dms) && dms.length > 0) await tx.insert(dailyMaintenance).values(dms).onConflictDoNothing();
+    if (Array.isArray(pms) && pms.length > 0) await tx.insert(preventiveSchedules).values(pms).onConflictDoNothing();
+    if (Array.isArray(mhs) && mhs.length > 0) await tx.insert(machineHistory).values(mhs).onConflictDoNothing();
+    if (Array.isArray(cmpsList) && cmpsList.length > 0) await tx.insert(complaints).values(cmpsList).onConflictDoNothing();
+    if (Array.isArray(stks) && stks.length > 0) await tx.insert(spareStock).values(stks).onConflictDoNothing();
+    if (Array.isArray(iss) && iss.length > 0) await tx.insert(stockIssues).values(iss).onConflictDoNothing();
+    if (Array.isArray(rcvs) && rcvs.length > 0) await tx.insert(stockReceives).values(rcvs).onConflictDoNothing();
+    if (Array.isArray(alts) && alts.length > 0) await tx.insert(lowStockAlerts).values(alts).onConflictDoNothing();
+    if (Array.isArray(reqs) && reqs.length > 0) await tx.insert(requisitions).values(reqs).onConflictDoNothing();
+    if (Array.isArray(apprs) && apprs.length > 0) await tx.insert(approvals).values(apprs).onConflictDoNothing();
+    if (Array.isArray(purchs) && purchs.length > 0) await tx.insert(purchaseHistory).values(purchs).onConflictDoNothing();
+    if (Array.isArray(logs) && logs.length > 0) await tx.insert(activityLogs).values(logs).onConflictDoNothing();
+    if (Array.isArray(docs) && docs.length > 0) await tx.insert(documents).values(docs).onConflictDoNothing();
+  });
+
   await logActivity(
     actorEmail,
     'System Super Admin',
@@ -2810,7 +2869,7 @@ export async function superAdminRestoreBackupRecord(
 
   return {
     success: true,
-    message: 'Backup snapshot registered and synchronized successfully.',
+    message: 'Backup snapshot restored successfully into database.',
     restoredAt: new Date().toISOString(),
   };
 }

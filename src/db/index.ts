@@ -33,15 +33,13 @@ if (!host) {
 if (host.startsWith('/')) {
   const socketFile = `${host}/.s.PGSQL.5432`;
   if (!fs.existsSync(host) || !fs.existsSync(socketFile)) {
-    console.warn(`[DB] Cloud SQL Unix socket ${socketFile} not found for instance 'ai-studio-7ccedddb'. Running in resilient fallback mode.`);
+    console.warn(`[DB] Cloud SQL Unix socket ${socketFile} not found.`);
     dbAvailable = false;
   } else {
     console.log(`[DB] Cloud SQL Auth Proxy socket connected successfully at ${socketFile}`);
   }
-} else if (!host) {
-  if (!process.env.SQL_USER && !process.env.PGUSER) {
-    dbAvailable = false;
-  }
+} else if (!host && !process.env.SQL_USER && !process.env.PGUSER && !process.env.PGHOST) {
+  dbAvailable = false;
 }
 
 export const createPool = () => {
